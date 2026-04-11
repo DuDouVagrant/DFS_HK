@@ -1,0 +1,33 @@
+nohup: ignoring input
+============================================================
+[2026-04-11 11:49:50] Start: ./logs/RobustPrompt-T/GraphCL/Cora_shot_5_split_1_seed_1_2_3_4_5_no_attack_original.log
+GPU_ID=1
+============================================================
+/home/ruoyu/.local/lib/python3.10/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-scatter'. Disabling its usage. Stacktrace: /home/ruoyu/.local/lib/python3.10/site-packages/torch_scatter/_version_cuda.so: undefined symbol: _ZN3c106detail14torchCheckFailEPKcS2_jRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+  import torch_geometric.typing
+/home/ruoyu/.local/lib/python3.10/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-cluster'. Disabling its usage. Stacktrace: /home/ruoyu/.local/lib/python3.10/site-packages/torch_cluster/_version_cuda.so: undefined symbol: _ZN3c106detail14torchCheckFailEPKcS2_jRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+  import torch_geometric.typing
+/home/ruoyu/.local/lib/python3.10/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-spline-conv'. Disabling its usage. Stacktrace: /home/ruoyu/.local/lib/python3.10/site-packages/torch_spline_conv/_version_cuda.so: undefined symbol: _ZN3c106detail14torchCheckFailEPKcS2_jRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+  import torch_geometric.typing
+/home/ruoyu/.local/lib/python3.10/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-sparse'. Disabling its usage. Stacktrace: /home/ruoyu/.local/lib/python3.10/site-packages/torch_sparse/_version_cuda.so: undefined symbol: _ZN3c106detail14torchCheckFailEPKcS2_jRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+  import torch_geometric.typing
+Traceback (most recent call last):
+  File "/data/ruoyu/GPromptShield-master/MyTask.py", line 2, in <module>
+    from prompt_graph.tasker import NodeTask, GraphTask
+  File "/data/ruoyu/GPromptShield-master/prompt_graph/__init__.py", line 1, in <module>
+    import prompt_graph.data
+  File "/data/ruoyu/GPromptShield-master/prompt_graph/data/__init__.py", line 1, in <module>
+    from .induced_graph import induced_graphs, induced_graphs_from_edges, split_induced_graphs, split_induced_graphs_save_relabel_central_node_and_raw_index
+  File "/data/ruoyu/GPromptShield-master/prompt_graph/data/induced_graph.py", line 11, in <module>
+    from prompt_graph.utils import mkdir
+  File "/data/ruoyu/GPromptShield-master/prompt_graph/utils/__init__.py", line 11, in <module>
+    from .center_embedding import center_embedding,distance2center
+  File "/data/ruoyu/GPromptShield-master/prompt_graph/utils/center_embedding.py", line 2, in <module>
+    import torch_scatter
+  File "/home/ruoyu/.local/lib/python3.10/site-packages/torch_scatter/__init__.py", line 16, in <module>
+    torch.ops.load_library(spec.origin)
+  File "/home/ruoyu/.local/lib/python3.10/site-packages/torch/_ops.py", line 1350, in load_library
+    ctypes.CDLL(path)
+  File "/usr/lib/python3.10/ctypes/__init__.py", line 374, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: /home/ruoyu/.local/lib/python3.10/site-packages/torch_scatter/_version_cuda.so: undefined symbol: _ZN3c106detail14torchCheckFailEPKcS2_jRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
