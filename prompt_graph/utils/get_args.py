@@ -64,7 +64,9 @@ def get_args():
                         help='Weight for original filter signal in hybrid mode.')
 
 
-
+    # GraphCL 预训练专用的数据增强参数
+    parser.add_argument('--aug1', type=str, default='dropN', choices=['dropN', 'permE', 'maskN'], help='GraphCL augmentation method 1')
+    parser.add_argument('--aug2', type=str, default='permE', choices=['dropN', 'permE', 'maskN'], help='GraphCL augmentation method 2')
 
     args = parser.parse_args()
     return args

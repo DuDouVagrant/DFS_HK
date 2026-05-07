@@ -1,35 +1,33 @@
-python MyPretrain.py \
---task 'GraphCL' \
---dataset_name 'Cora_ml' \
---preprocess_method 'none' \
---gnn_type 'GCN' \
---hid_dim 64 \
---num_layer 2 \
---epochs 200 \
---seed 56 \
---device 1
+#!/bin/bash
 
-# 'GraphCL'  'Edgepred_Gprompt' 'NodeMultiGprompt' 'GraphMAE'
+# 预定义的增强策略池
+AUG_METHODS=("dropN" "permE" "maskN")
+LEARNING_RATES=(0.01 0.005)
 
-#########################################
-# GraphCL hid_dim
-# Cora 256 
-# Citeseer 64          GraphCL num_parts=5
-# coraml 64
+# 遍历所有增强组合和学习率
+for lr in "${LEARNING_RATES[@]}"; do
+    for aug1 in "${AUG_METHODS[@]}"; do
+        for aug2 in "${AUG_METHODS[@]}"; do
+            
+            echo "=========================================================="
+            echo "Running GraphCL Pretrain: aug1=$aug1, aug2=$aug2, lr=$lr"
+            echo "=========================================================="
+            
+            python MyPretrain.py \
+                --task 'GraphCL' \
+                --dataset_name 'Cora' \
+                --preprocess_method 'none' \
+                --gnn_type 'GCN' \
+                --hid_dim 256 \
+                --num_layer 2 \
+                --epochs 200 \
+                --seed 56 \
+                --device 0 \
+                --aug1 "$aug1" \
+                --aug2 "$aug2" \
+                --lr "$lr"
+        done
+    done
+done
 
-# 'Edgepred_Gprompt' hid_dim
-# Cora 256 
-# Citeseer 64 
-
-
-# NodeMultiGprompt hid_dim
-# Cora 256 
-# Citeseer 128 
-#########################################
-
-
-
-#########################################
-# GraphMAE
-# Citeseer 256
-# CoraML  64
+echo "All grid search pretraining tasks finished!"

@@ -10,7 +10,16 @@ for seed in args.seed:
 
     if args.task == 'GraphCL':
         pt = GraphCL(dataset_name = args.dataset_name, gnn_type = args.gnn_type, hid_dim = args.hid_dim, gln = args.num_layer, num_epoch=args.epochs, preprocess_method = args.preprocess_method, device=args.device)
+        
+        # 核心改动：从 args 动态读取超参数，如果没有则使用默认回退值
+        aug1 = getattr(args, 'aug1', 'dropN')
+        aug2 = getattr(args, 'aug2', 'permE')
+        lr = getattr(args, 'lr', 0.01)
+        
+        pt.pretrain(aug1=aug1, aug2=aug2, lr=lr)
+
         # Cora 256
+        
     if args.task == 'Edgepred_Gprompt':
         pt = Edgepred_Gprompt(dataset_name = args.dataset_name, gnn_type = args.gnn_type, hid_dim = args.hid_dim, gln = args.num_layer, num_epoch=args.epochs, device=args.device)
 

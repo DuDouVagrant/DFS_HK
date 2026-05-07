@@ -1,0 +1,660 @@
+nohup: ignoring input
+==========================================================
+Running GraphCL Pretrain: aug1=dropN, aug2=dropN, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: dropN and dropN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.x
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.tx
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.allx
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.y
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.ty
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.ally
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.graph
+Downloading https://github.com/kimiyoung/planetoid/raw/master/data/ind.cora.test.index
+Processing...
+Done!
+***epoch: 50/200 | train_loss: 0.0053789062
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3460
+***epoch: 100/200 | train_loss: 0.0060319961
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.2960
+***epoch: 150/200 | train_loss: 0.0022932126
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3820
+***epoch: 200/200 | train_loss: 0.0011533863
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3100
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_dropN.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0014762927
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4460
+***epoch: 100/200 | train_loss: 0.0012702046
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4590
+***epoch: 150/200 | train_loss: 0.019105962
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4090
+***epoch: 200/200 | train_loss: 0.0012285618
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4850
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=dropN, aug2=permE, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: dropN and permE with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.038451284
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3150
+***epoch: 100/200 | train_loss: 0.44731894
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.2530
+***epoch: 150/200 | train_loss: 0.004670475
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3250
+***epoch: 200/200 | train_loss: 0.0039197241
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.2770
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0019415729
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3330
+***epoch: 100/200 | train_loss: 0.0018089823
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.2860
+***epoch: 150/200 | train_loss: 0.0024441546
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.2920
+***epoch: 200/200 | train_loss: 0.0020170585
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3150
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=dropN, aug2=maskN, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: dropN and maskN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0012054813
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.5030
+***epoch: 100/200 | train_loss: 0.0010179914
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4270
+***epoch: 150/200 | train_loss: 0.008757344
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4760
+***epoch: 200/200 | train_loss: 0.0016476036
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4820
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_maskN.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0015756204
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4220
+***epoch: 100/200 | train_loss: 0.0015642185
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4850
+***epoch: 150/200 | train_loss: 0.0023921465
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3720
+***epoch: 200/200 | train_loss: 0.00097902854
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4090
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=permE, aug2=dropN, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: permE and dropN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.26205884
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3480
+***epoch: 100/200 | train_loss: 0.0025944564
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3550
+***epoch: 150/200 | train_loss: 0.0017810548
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3670
+***epoch: 200/200 | train_loss: 0.11731678
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4190
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_permE.aug2_dropN.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0019429598
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.5110
+***epoch: 100/200 | train_loss: 0.0039477179
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3880
+***epoch: 150/200 | train_loss: 0.065047747
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4470
+***epoch: 200/200 | train_loss: 0.0015895125
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3830
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=permE, aug2=permE, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: permE and permE with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0024985654
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3950
+***epoch: 100/200 | train_loss: 0.096329584
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3730
+***epoch: 150/200 | train_loss: 0.003021939
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3600
+***epoch: 200/200 | train_loss: 0.0015972608
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3930
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_permE.aug2_permE.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0013424657
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3360
+***epoch: 100/200 | train_loss: 0.0014747755
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4110
+***epoch: 150/200 | train_loss: 0.16378571
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3610
+***epoch: 200/200 | train_loss: 0.001011402
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3850
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=permE, aug2=maskN, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: permE and maskN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0015394274
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.2900
+***epoch: 100/200 | train_loss: 0.0012115089
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3470
+***epoch: 150/200 | train_loss: 0.039812498
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3780
+***epoch: 200/200 | train_loss: 0.034675587
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4080
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_permE.aug2_maskN.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0014273577
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3310
+***epoch: 100/200 | train_loss: 0.0014559011
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4590
+***epoch: 150/200 | train_loss: 0.0013576559
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4130
+***epoch: 200/200 | train_loss: 0.0096877317
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.2860
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=maskN, aug2=dropN, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: maskN and dropN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0021222018
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4170
+***epoch: 100/200 | train_loss: 0.094807855
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3920
+***epoch: 150/200 | train_loss: 0.0037450273
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4470
+***epoch: 200/200 | train_loss: 0.0017913488
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3260
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_maskN.aug2_dropN.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0015992013
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3430
+***epoch: 100/200 | train_loss: 0.0010604285
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3550
+***epoch: 150/200 | train_loss: 0.0017451106
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3130
+***epoch: 200/200 | train_loss: 0.0015891519
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3120
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=maskN, aug2=permE, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: maskN and permE with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.038828855
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3860
+***epoch: 100/200 | train_loss: 0.0024955198
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3200
+***epoch: 150/200 | train_loss: 0.0031293417
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3500
+***epoch: 200/200 | train_loss: 0.0010659947
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4120
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_maskN.aug2_permE.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.001488962
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4190
+***epoch: 100/200 | train_loss: 0.0011006072
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4600
+***epoch: 150/200 | train_loss: 0.0012269371
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4360
+***epoch: 200/200 | train_loss: 0.0017781177
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4170
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=maskN, aug2=maskN, lr=0.01
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: maskN and maskN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.052714537
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4110
+***epoch: 100/200 | train_loss: 0.0013593678
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3540
+***epoch: 150/200 | train_loss: 0.029771843
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3890
+***epoch: 200/200 | train_loss: 0.0016611389
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4310
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_maskN.aug2_maskN.lr_0.01.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0014606857
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.5020
+***epoch: 100/200 | train_loss: 0.0014628795
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4840
+***epoch: 150/200 | train_loss: 0.0052718163
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.5300
+***epoch: 200/200 | train_loss: 0.0013728261
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4520
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=dropN, aug2=dropN, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: dropN and dropN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.39044426
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3240
+***epoch: 100/200 | train_loss: 0.10156274
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3790
+***epoch: 150/200 | train_loss: 0.11275747
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3730
+***epoch: 200/200 | train_loss: 0.0011710757
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4000
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_dropN.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0015224638
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4150
+***epoch: 100/200 | train_loss: 0.0013577434
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4310
+***epoch: 150/200 | train_loss: 0.0011903409
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3060
+***epoch: 200/200 | train_loss: 0.0016842422
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3420
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=dropN, aug2=permE, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: dropN and permE with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.14290196
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3940
+***epoch: 100/200 | train_loss: 0.0029720131
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3960
+***epoch: 150/200 | train_loss: 0.0018494162
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4130
+***epoch: 200/200 | train_loss: 0.0016132229
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4440
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0014243811
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4300
+***epoch: 100/200 | train_loss: 0.0012722904
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4660
+***epoch: 150/200 | train_loss: 0.0016447595
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4640
+***epoch: 200/200 | train_loss: 0.0014725482
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3960
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=dropN, aug2=maskN, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: dropN and maskN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.15848112
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3720
+***epoch: 100/200 | train_loss: 0.15682428
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3490
+***epoch: 150/200 | train_loss: 0.077841475
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4040
+***epoch: 200/200 | train_loss: 0.019839682
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4120
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_maskN.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.091512432
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4220
+***epoch: 100/200 | train_loss: 0.0028726828
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4770
+***epoch: 150/200 | train_loss: 0.04836322
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4470
+***epoch: 200/200 | train_loss: 0.0031767033
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.5240
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=permE, aug2=dropN, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: permE and dropN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0016230968
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.2690
+***epoch: 100/200 | train_loss: 0.017757692
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4230
+***epoch: 150/200 | train_loss: 0.001081365
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4460
+***epoch: 200/200 | train_loss: 0.020487302
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3830
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_permE.aug2_dropN.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0015385777
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3580
+***epoch: 100/200 | train_loss: 0.0016054743
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.2740
+***epoch: 150/200 | train_loss: 0.0015383044
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3780
+***epoch: 200/200 | train_loss: 0.0014982278
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3870
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=permE, aug2=permE, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: permE and permE with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.031018128
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4560
+***epoch: 100/200 | train_loss: 0.001943347
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4830
+***epoch: 150/200 | train_loss: 0.012541959
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4600
+***epoch: 200/200 | train_loss: 0.0010862357
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.2770
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_permE.aug2_permE.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0015073249
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3950
+***epoch: 100/200 | train_loss: 0.0026159764
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3900
+***epoch: 150/200 | train_loss: 0.001557213
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3030
+***epoch: 200/200 | train_loss: 0.0014897306
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3780
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=permE, aug2=maskN, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: permE and maskN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0025682655
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3190
+***epoch: 100/200 | train_loss: 0.0013009139
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4290
+***epoch: 150/200 | train_loss: 0.0011631353
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3340
+***epoch: 200/200 | train_loss: 0.0011928822
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.2710
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_permE.aug2_maskN.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0056647659
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3900
+***epoch: 100/200 | train_loss: 0.0019046778
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4180
+***epoch: 150/200 | train_loss: 0.0014992898
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3650
+***epoch: 200/200 | train_loss: 0.0012275517
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3080
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=maskN, aug2=dropN, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: maskN and dropN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.59564999
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4630
+***epoch: 100/200 | train_loss: 0.024061299
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3920
+***epoch: 150/200 | train_loss: 0.0014868654
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4110
+***epoch: 200/200 | train_loss: 0.0016250463
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3590
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_maskN.aug2_dropN.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0012945423
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4180
+***epoch: 100/200 | train_loss: 0.0014077575
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3960
+***epoch: 150/200 | train_loss: 0.0012324872
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4620
+***epoch: 200/200 | train_loss: 0.0011842659
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4200
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=maskN, aug2=permE, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: maskN and permE with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.20587249
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4800
+***epoch: 100/200 | train_loss: 0.24204252
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.3740
+***epoch: 150/200 | train_loss: 0.36175092
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3640
+***epoch: 200/200 | train_loss: 0.040395062
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4260
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_maskN.aug2_permE.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0016566451
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4860
+***epoch: 100/200 | train_loss: 0.0018945944
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4070
+***epoch: 150/200 | train_loss: 0.0015747941
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3880
+***epoch: 200/200 | train_loss: 0.0026903023
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.3730
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+==========================================================
+Running GraphCL Pretrain: aug1=maskN, aug2=maskN, lr=0.005
+==========================================================
+Computing METIS partitioning...
+Done!
+folder exists! ./pre_trained_model/
+Cora
+Now use raw datasets for pretrain !
+GCN(
+  (conv_layers): ModuleList(
+    (0): GCNConv(1433, 256)
+    (1): GCNConv(256, 256)
+  )
+)
+===graph views: maskN and maskN with aug_ratio: 0.2
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.096830194
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.4360
+***epoch: 100/200 | train_loss: 0.04298826
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4180
+***epoch: 150/200 | train_loss: 0.084330637
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.3840
+***epoch: 200/200 | train_loss: 0.16665139
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4070
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_maskN.aug2_maskN.lr_0.005.pth
+===graph views: dropN and permE with aug_ratio: 0.3
+start training Cora | GraphCL | GCN...
+***epoch: 50/200 | train_loss: 0.0087448731
+   ---> [Downstream] epoch: 50/200 | SVC test_acc: 0.3050
+***epoch: 100/200 | train_loss: 0.002174494
+   ---> [Downstream] epoch: 100/200 | SVC test_acc: 0.4070
+***epoch: 150/200 | train_loss: 0.0016665144
+   ---> [Downstream] epoch: 150/200 | SVC test_acc: 0.4800
+***epoch: 200/200 | train_loss: 0.0015601343
+   ---> [Downstream] epoch: 200/200 | SVC test_acc: 0.4400
++++model saved ! Cora.GraphCL.GCN.256_hidden_dim.aug1_dropN.aug2_permE.lr_0.01.pth
+All grid search pretraining tasks finished!
