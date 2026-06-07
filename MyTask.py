@@ -32,8 +32,9 @@ if args.task == 'NodeTask':
         seed_acc_dict = {}
         for split_num in args.run_split:
             tasker = NodeTask(pre_train_model_path = args.pre_train_model_path, hid_dim=args.hid_dim,
-                            dataset_name = args.dataset_name, num_layer = args.num_layer, gnn_type = args.gnn_type, 
-                            prompt_type = args.prompt_type, epochs = args.epochs, shot_num = args.shot_num, run_split= split_num, preprocess_method = args.preprocess_method, attack_downstream = args.attack_downstream, attack_method = args.attack_method, specified = args.specified, adaptive = args.adaptive, adaptive_scenario=args.adaptive_scenario, adaptive_split= args.adaptive_split, adaptive_attack_model= args.adaptive_attack_model, adaptive_ptb_rate= args.adaptive_ptb_rate, filter_mode=args.filter_mode, filter_sim1_weight=args.filter_sim1_weight, filter_sim2_weight=args.filter_sim2_weight, filter_hybrid_alpha=args.filter_hybrid_alpha)
+                            dataset_name = args.dataset_name, num_layer = args.num_layer, gnn_type = args.gnn_type,
+                            prompt_type = args.prompt_type, epochs = args.epochs, shot_num = args.shot_num, run_split= split_num, preprocess_method = args.preprocess_method, attack_downstream = args.attack_downstream, attack_method = args.attack_method, specified = args.specified, adaptive = args.adaptive, adaptive_scenario=args.adaptive_scenario, adaptive_split= args.adaptive_split, adaptive_attack_model= args.adaptive_attack_model, adaptive_ptb_rate= args.adaptive_ptb_rate, filter_mode=args.filter_mode, filter_sim1_weight=args.filter_sim1_weight, filter_sim2_weight=args.filter_sim2_weight, filter_hybrid_alpha=args.filter_hybrid_alpha,
+                            pt_threshold=args.pt_threshold, weight_mse=args.weight_mse, weight_kl=args.weight_kl, weight_constraint=args.weight_constraint, temperature=args.temperature, pt_sim_threshold=args.pt_sim_threshold, pt_degree_threshold=args.pt_degree_threshold, pt_out_detect_threshold=args.pt_out_detect_threshold, p_plus=args.p_plus, use_attention=args.use_attention, cosine_constraint=args.cosine_constraint, prompt_lr=args.prompt_lr)
             
             test_acc = tasker.run()
 

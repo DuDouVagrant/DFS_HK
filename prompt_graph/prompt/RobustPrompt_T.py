@@ -18,7 +18,7 @@ class RobustPrompt_T(torch.nn.Module):
 
         self.use_attention     = use_attention
         self.cosine_constraint = cosine_constraint   # 是否用cosine计算prompt间距离
-        self.pt_threshold      = pt_threshold        # 添加final prompt后的修剪超参数
+        self.pt_threshold      = pt_threshold        # τ_tune 修剪超参数
         self.p_plus            = p_plus
         self.filter_module     = filter_module if filter_module is not None else OriginalFilter(threshold=pt_threshold)
         self.filter_mode       = getattr(self.filter_module, 'mode', 'original')
@@ -229,7 +229,22 @@ class RobustPrompt_T(torch.nn.Module):
             node_use_each_pt_whole_graph['degree_pt'] = node_use_degree_pt
             
         if 'out_detect_pt' in self.pt_keys:
-            pass
+            x_norm = x / (torch.sqrt(torch.sum(x * x, dim=1)).unsqueeze(-1) + 1e-12)
+            e = torch.sum(x_norm[edge_index[0]] * x_norm[edge_index[1]], dim=1)
+            ood_threshold = self.pt_dict['out_detect_pt']
+            ood_edge_mask = e <= ood_threshold
+            ood_edges = edge_index[:, ood_edge_mask]
+            node_use_ood_pt = torch.unique(torch.cat([ood_edges[0], ood_edges[1]]))
+
+            if self.p_plus and len(node_use_ood_pt) > 0:
+                score = self.out_detect_pt_a(x[node_use_ood_pt])
+                ood_weight = F.softmax(score, dim=1)
+                self.prompt_out_detect_pt = ood_weight.mm(self.out_detect_pt_list)
+
+            node_use_pt = torch.concat((node_use_pt, node_use_ood_pt))
+            if len(node_use_ood_pt) > 0:
+                g_mutiftpt_record[node_use_ood_pt, pt_range_dict['out_detect_pt'][0] : pt_range_dict['out_detect_pt'][1]] = self.prompt_out_detect_pt
+            node_use_each_pt_whole_graph['out_detect_pt'] = node_use_ood_pt
 
         if 'other_pt' in self.pt_keys:
             all_nodes    = torch.arange(0, g.num_nodes).to(device)
@@ -267,28 +282,19 @@ class RobustPrompt_T(torch.nn.Module):
         # 融合不同pt的方式选择
         g_mutiftpt_record = g_mutiftpt_record.reshape(g.num_nodes, len(self.pt_keys), self.in_channels)
         if self.use_attention:
-            # 用self-attention
-            # 加一个readout_token
             g_mutiftpt_record = torch.cat([self.readout_token.expand(g.num_nodes, 1, self.in_channels), g_mutiftpt_record], dim=1)
-            # padding位置
             padding = torch.zeros(self.in_channels).to(device)
-            key_padding_mask = torch.all(g_mutiftpt_record == padding, dim=-1, keepdim=True).squeeze(-1)
+            key_padding_mask = torch.all(g_mutiftpt_record == padding, dim=-1)
 
-            # 利用attention得到prompt之间的关系
-            g_mutiftpt_output, g_mutiftpt_attn_weights =  self.attention_layer(g_mutiftpt_record, g_mutiftpt_record, g_mutiftpt_record, key_padding_mask = key_padding_mask)
-            g_mutiftpt_output = torch.nn.functional.normalize(g_mutiftpt_record, p=1, dim=2) # 为了数据的稳定！非常关键！要不都是nan   p=1好像比p=2要好
-            # 对每个节点attention后所有的prompt求avg得到每个节点的最终混合prompt
-            # g_mutiftpt_final_output = torch.mean(g_mutiftpt_output, dim=1) # 求平均，不好，因为有一些padding的embedding
-            g_mutiftpt_final_output = g_mutiftpt_output[:,0,:] # BERT的方法，利用添加的readout_token的embedding
+            g_mutiftpt_output, g_mutiftpt_attn_weights = self.attention_layer(
+                g_mutiftpt_record, g_mutiftpt_record, g_mutiftpt_record,
+                key_padding_mask=key_padding_mask
+            )
+            g_mutiftpt_final_output = g_mutiftpt_output[:, 0, :]
 
-            # ************************************ 过滤器 ************************************ #
-            # 这里对没有加任何pt的节点进行过滤，要不然每个节点都会加readout_token的embedding
-            node_num_pt = key_padding_mask.sum(-1)
-            # num_nodes_pt == len(self.pt_keys)即所有的pt全是padding，全为True，只有readout_token是False
-            node_use_no_pt_indices = torch.nonzero(node_num_pt == len(self.pt_keys)).squeeze(-1)
-            # 把所有只有readout_token的都变成0,过滤一下，这些节点不加任何提示
+            node_num_pt = (~key_padding_mask[:, 1:]).sum(-1)
+            node_use_no_pt_indices = torch.nonzero(node_num_pt == 0).squeeze(-1)
             g_mutiftpt_final_output[node_use_no_pt_indices] = padding
-            # ************************************ 过滤器 ************************************ #
         else:    
             # 用求平均 如果只用'other_pt'就完全复刻GPF
             padding = torch.zeros(self.in_channels).to(device)
@@ -345,12 +351,22 @@ class RobustPrompt_T(torch.nn.Module):
 
 
         ######################################################################################
-        # 放在后面： 对图的特征进行多提示添加后根据添加prompt的特征修剪图
+        # τ_tune 边剪枝（对齐论文 Equation 15）：添加 prompt → GNN forward → 基于中间 embedding 的 cosine similarity 剪枝 → 剪枝后 GNN forward
+        # 注：论文仅此一处边剪枝（τ_tune）。论文的三个 Filtering Tips（degree/similarity/OOD）全部用于节点分选 prompt，不用于边剪枝。
         g_mutiftpt, node_use_each_pt_whole_graph = self.add_muti_pt(graph, device)
-        filter_output = self.filter_module(g_mutiftpt)
-        pruned_edge_index = g_mutiftpt.edge_index[:, filter_output['edge_mask']]
-        pruned_g_mutiftpt = Data(x=g_mutiftpt.x, edge_index=pruned_edge_index, y=g_mutiftpt.y)
-        node_emb = gnn(pruned_g_mutiftpt.x, pruned_g_mutiftpt.edge_index)
+        # 第一次 GNN forward 获取中间 embedding（在全图上，无预剪枝）
+        node_emb_intermediate = gnn(g_mutiftpt.x, g_mutiftpt.edge_index)
+        # 基于中间 embedding 的 cosine similarity 进行 τ_tune 剪枝
+        edge_sim_intermediate = F.cosine_similarity(
+            node_emb_intermediate[g_mutiftpt.edge_index[0]],
+            node_emb_intermediate[g_mutiftpt.edge_index[1]],
+            dim=1
+        )
+        tune_keep_mask = edge_sim_intermediate >= self.pt_threshold
+        tuned_edge_index = g_mutiftpt.edge_index[:, tune_keep_mask]
+        tuned_g = Data(x=g_mutiftpt.x, edge_index=tuned_edge_index, y=g_mutiftpt.y)
+        # 第二次 GNN forward 在剪枝后的图上得到最终 node embedding
+        node_emb = gnn(tuned_g.x, tuned_g.edge_index)
         ######################################################################################
         # *****************************************  Prompt Pruned PART  ***************************************** #
 
@@ -367,8 +383,8 @@ class RobustPrompt_T(torch.nn.Module):
 
         # *********************************************  loss PART  ********************************************* #
         ######################################################################################
-        # loss_mse 提示整体以同质性假设为导向
-        loss_mse = F.mse_loss(node_emb[g_mutiftpt.edge_index[0]], node_emb[g_mutiftpt.edge_index[1]])
+        # loss_mse 提示整体以同质性假设为导向 (L_s in paper)
+        loss_mse = F.mse_loss(node_emb[tuned_g.edge_index[0]], node_emb[tuned_g.edge_index[1]])
         # print("loss_mse : ", loss_mse)
         ######################################################################################
         # loss_pt 针对每一个prompt让筛选节点的平均embedding和未筛选节点的平均embedding相似
@@ -417,11 +433,16 @@ class RobustPrompt_T(torch.nn.Module):
 
         loss = lossfn(out[graph.train_mask], graph.y[graph.train_mask]) + self.weight_mse * loss_mse + self.weight_kl * loss_pt + self.weight_constraint * loss_constraint
         opi.zero_grad()
-        loss.backward()  
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+        torch.nn.utils.clip_grad_norm_(answering.parameters(), max_norm=1.0)
         opi.step()
         return loss
 
-    def filter_graph(self, graph):
-        filter_output = self.filter_module(graph)
-        pruned_graph = Data(x=graph.x, edge_index=graph.edge_index[:, filter_output['edge_mask']], y=graph.y)
-        return pruned_graph, filter_output
+    # （2026-06-03 对齐论文）filter_graph 不再使用。
+    # 论文推理时不剪枝（仅 add_muti_pt + GNN forward）；训练时仅 τ_tune 边剪枝（不加 filter_module 预处理）。
+    # filter_module 是基于原始特征/AX 余弦的边过滤，为代码额外引入，论文无此组件。
+    # def filter_graph(self, graph):
+    #     filter_output = self.filter_module(graph)
+    #     pruned_graph = Data(x=graph.x, edge_index=graph.edge_index[:, filter_output['edge_mask']], y=graph.y)
+    #     return pruned_graph, filter_output

@@ -38,7 +38,7 @@ class NodeTask(BaseTask):
 
             self.initialize_gnn()
             self.initialize_prompt()
-            self.answering =  torch.nn.Sequential(torch.nn.Linear(self.hid_dim, self.output_dim), torch.nn.Softmax(dim=1)).to(self.device)
+            self.answering =  torch.nn.Linear(self.hid_dim, self.output_dim).to(self.device)
             self.initialize_optimizer()
       
 
@@ -712,6 +712,7 @@ class NodeTask(BaseTask):
 
             
             import math
+            test_acc = float('nan')
             if not math.isnan(loss):
                   batch_best_loss.append(loss)
                   if self.prompt_type == 'None':

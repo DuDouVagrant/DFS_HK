@@ -63,6 +63,37 @@ def get_args():
     parser.add_argument('--filter_hybrid_alpha',            type=float,               default=0.5,
                         help='Weight for original filter signal in hybrid mode.')
 
+    # RobustPrompt-T 超参数（GPromptShield）
+    parser.add_argument('--pt_threshold',                   type=float,               default=0.5,
+                        help='τ_tune: cosine similarity threshold for edge pruning in Tune()')
+    parser.add_argument('--weight_mse',                     type=float,               default=0.1,
+                        help='Weight for MSE smoothness loss (L_s)')
+    parser.add_argument('--weight_kl',                      type=float,               default=0.3,
+                        help='Weight for KL distribution alignment loss')
+    parser.add_argument('--weight_constraint',              type=float,               default=0.2,
+                        help='Weight for prompt orthogonality constraint loss')
+    parser.add_argument('--temperature',                    type=float,               default=1.0,
+                        help='Temperature for KL divergence in loss_pt')
+    parser.add_argument('--pt_sim_threshold',               type=float,               default=0.4,
+                        help='Cosine similarity threshold for sim_pt node selection')
+    parser.add_argument('--pt_degree_threshold',            type=int,                 default=2,
+                        help='Degree threshold for degree_pt node selection')
+    parser.add_argument('--pt_out_detect_threshold',        type=float,               default=0.5,
+                        help='Cosine similarity threshold for out_detect_pt OOD edge detection')
+    parser.add_argument('--p_plus', dest='p_plus', action='store_true', default=True,
+                        help='Use p_plus mode (20-token bank + learned combination)')
+    parser.add_argument('--no_p_plus', dest='p_plus', action='store_false',
+                        help='Disable p_plus mode, use single shared prompt per type')
+    parser.add_argument('--use_attention', dest='use_attention', action='store_true', default=True,
+                        help='Enable Self-Attention fusion of multi-defense prompts')
+    parser.add_argument('--no_attention', dest='use_attention', action='store_false',
+                        help='Disable attention fusion, use averaging instead')
+    parser.add_argument('--cosine_constraint', dest='cosine_constraint', action='store_true', default=True,
+                        help='Enable cosine-based prompt orthogonality constraint')
+    parser.add_argument('--no_cosine_constraint', dest='cosine_constraint', action='store_false',
+                        help='Disable cosine constraint on prompts')
+    parser.add_argument('--prompt_lr',                      type=float,               default=0.01,
+                        help='Learning rate for RobustPrompt-T optimizer (prompt + answering head)')
 
     # GraphCL 预训练专用的数据增强参数
     parser.add_argument('--aug1', type=str, default='dropN', choices=['dropN', 'permE', 'maskN'], help='GraphCL augmentation method 1')

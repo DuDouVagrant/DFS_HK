@@ -15,14 +15,14 @@ for lr in "${LEARNING_RATES[@]}"; do
             
             python MyPretrain.py \
                 --task 'GraphCL' \
-                --dataset_name 'Cora' \
+                --dataset_name 'Cora_ml' \
                 --preprocess_method 'none' \
                 --gnn_type 'GCN' \
-                --hid_dim 256 \
+                --hid_dim 64 \
                 --num_layer 2 \
                 --epochs 200 \
                 --seed 56 \
-                --device 0 \
+                --device 1 \
                 --aug1 "$aug1" \
                 --aug2 "$aug2" \
                 --lr "$lr"

@@ -68,10 +68,8 @@ def RobustPromptTranductiveEva(data, mask, gnn, prompt, answering, num_class, de
     ######################################################################################
     
     #####################################################################################
-    # 前后都不处理，直接加提示
+    # 推理时不剪枝（对齐论文）：添加 prompt → GNN forward，不做任何边过滤
     g_mutiftpt, _    = prompt.add_muti_pt(data, device)
-    if hasattr(prompt, 'filter_graph') and getattr(prompt, 'filter_mode', 'original') != 'original':
-        g_mutiftpt, _ = prompt.filter_graph(g_mutiftpt)
     out = gnn(g_mutiftpt.x, g_mutiftpt.edge_index)
     #####################################################################################
 
