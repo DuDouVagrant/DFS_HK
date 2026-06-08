@@ -91,7 +91,7 @@ class BaseTask:
             model_param_group = []
             model_param_group.append({"params": self.prompt.parameters()})
             model_param_group.append({"params": self.answering.parameters()})
-            self.optimizer = optim.Adam(model_param_group, lr=0.001, weight_decay=5e-4)
+            self.optimizer = optim.Adam(model_param_group, lr=self.prompt_lr, weight_decay=5e-4)
         # prompt和anwser头分开优化
         # elif self.prompt_type == 'RobustPrompt_I':
         #     self.pg_opi = optim.Adam(filter(lambda p: p.requires_grad, self.prompt.parameters()), lr=0.001, weight_decay= 0.00001)
@@ -209,26 +209,32 @@ class BaseTask:
             # quit()
 
         elif self.prompt_type == 'RobustPrompt-I': 
-             # {'sim_pt': 0.4, 'degree_pt': 2, 'other_pt' : 'all'}
+            # Inductive MD-PT path: node classification is converted to k-hop
+            # subgraph classification, while prompt selection mirrors RobustPrompt-T.
             prompt_filter = build_filter(SimpleNamespace(
                 filter_mode=self.filter_mode,
                 filter_sim1_weight=self.filter_sim1_weight,
                 filter_sim2_weight=self.filter_sim2_weight,
                 filter_hybrid_alpha=self.filter_hybrid_alpha,
-                pt_threshold=0.0,
+                pt_threshold=self.pt_threshold,
             ))
             self.prompt = RobustPrompt_I(self.input_dim,  
-                                              muti_defense_pt_dict={'other_pt' : 'all'},  
-                                              p_plus=True,
-                                              use_attention=True,  
+                                              muti_defense_pt_dict={
+                                                  'sim_pt': self.pt_sim_threshold,
+                                                  'degree_pt': self.pt_degree_threshold,
+                                                  'out_detect_pt': self.pt_out_detect_threshold,
+                                                  'other_pt': 'all',
+                                              },  
+                                              p_plus=self.p_plus,
+                                              use_attention=self.use_attention,  
                                               num_heads=1, 
                                               kl_global=False, 
-                                              cosine_constraint=True, 
-                                              pt_threshold=0.0, 
-                                              temperature=1.0,
-                                              weight_mse=0.1, 
-                                              weight_kl=0.3, 
-                                              weight_constraint=0.,
+                                              cosine_constraint=self.cosine_constraint, 
+                                              pt_threshold=self.pt_threshold, 
+                                              temperature=self.temperature,
+                                              weight_mse=self.weight_mse, 
+                                              weight_kl=self.weight_kl, 
+                                              weight_constraint=self.weight_constraint,
                                               filter_module=prompt_filter).to(self.device)
         elif self.prompt_type == 'RobustPrompt-T':
             prompt_filter = build_filter(SimpleNamespace(

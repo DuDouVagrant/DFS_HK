@@ -150,7 +150,7 @@ class RobustPrompt_I(torch.nn.Module):
         node_use_each_pt_whole_batch = {}
         for pt in self.pt_keys:
             if self.kl_global:
-                node_use_each_pt_whole_batch[pt] = torch.tensor([]).to(device)     # 用tensor直接把所有batch的都保存
+                node_use_each_pt_whole_batch[pt] = torch.tensor([], dtype=torch.long).to(device)     # 用tensor直接把所有batch的都保存
             else:
                 node_use_each_pt_whole_batch[pt] = []                              # 用list可以分开存每一个图的pt使用的节点
         node_use_each_pt_whole_batch['g_start_index'] = []
@@ -172,19 +172,19 @@ class RobustPrompt_I(torch.nn.Module):
             x = g.x
             edge_index = g.edge_index
             # 用于记录当前图中所有defense pt用到的节点
-            node_use_pt = torch.tensor([]).to(device)
+            node_use_pt = torch.tensor([], dtype=torch.long).to(device)
 
 
             if 'sim_pt' in self.pt_keys:
                 # print('sim_pt : ',self.pt_dict['sim_pt'])
                 # 相似度(cos (θ))值范围从-1(不相似)到+1(非常相似) nan代表孤立节点，对结果不造成影响
-                x_norm = x / torch.sqrt(torch.sum(x * x,dim=1)).unsqueeze(-1)
+                x_norm = x / (torch.sqrt(torch.sum(x * x,dim=1)).unsqueeze(-1) + 1e-12)
                 e = torch.sum(x_norm[edge_index[0]] * x_norm[edge_index[1]], dim = 1).unsqueeze(-1)
                 row, col = edge_index
                 c = torch.zeros(x_norm.shape[0], 1).to(device)
                 c = c.scatter_add_(dim=0, index=col.unsqueeze(1), src=e)
                 deg = degree(col, x.size(0), dtype=x.dtype).unsqueeze(-1) 
-                csim = c / deg
+                csim = c / (deg + 1e-12)
                 csim = csim.squeeze()
                 node_use_sim_pt = torch.nonzero(csim <= self.pt_dict['sim_pt']).squeeze(-1) # 不能直接用squeeze()，会把所有1维度都压缩，当只有单个节点会有问题
   
@@ -240,7 +240,29 @@ class RobustPrompt_I(torch.nn.Module):
 
 
             if 'out_detect_pt' in self.pt_keys:
-                pass
+                x_norm = x / (torch.sqrt(torch.sum(x * x, dim=1)).unsqueeze(-1) + 1e-12)
+                edge_sim = torch.sum(x_norm[edge_index[0]] * x_norm[edge_index[1]], dim=1)
+                ood_edge_mask = edge_sim <= self.pt_dict['out_detect_pt']
+                ood_edges = edge_index[:, ood_edge_mask]
+                if ood_edges.numel() > 0:
+                    node_use_ood_pt = torch.unique(torch.cat([ood_edges[0], ood_edges[1]]))
+                else:
+                    node_use_ood_pt = torch.tensor([], dtype=torch.long).to(device)
+
+                if self.p_plus and len(node_use_ood_pt) > 0:
+                    score = self.out_detect_pt_a(x[node_use_ood_pt])
+                    ood_weight = F.softmax(score, dim=1)
+                    self.prompt_out_detect_pt = ood_weight.mm(self.out_detect_pt_list)
+
+                node_use_pt = torch.concat((node_use_pt, node_use_ood_pt))
+                if len(node_use_ood_pt) > 0:
+                    g_mutiftpt_record[node_use_ood_pt, pt_range_dict['out_detect_pt'][0] : pt_range_dict['out_detect_pt'][1]] = self.prompt_out_detect_pt
+
+                node_use_ood_pt = node_use_ood_pt + whole_batch_start_index
+                if self.kl_global:
+                    node_use_each_pt_whole_batch['out_detect_pt'] = torch.concat((node_use_each_pt_whole_batch['out_detect_pt'], node_use_ood_pt))
+                else:
+                    node_use_each_pt_whole_batch['out_detect_pt'].append(node_use_ood_pt.tolist())
 
 
             if 'other_pt' in self.pt_keys:
@@ -294,7 +316,6 @@ class RobustPrompt_I(torch.nn.Module):
                 key_padding_mask = torch.all(g_mutiftpt_record == padding, dim=-1, keepdim=True).squeeze(-1)
                 # 利用attention得到prompt之间的关系
                 g_mutiftpt_output, g_mutiftpt_attn_weights =  self.attention_layer(g_mutiftpt_record, g_mutiftpt_record, g_mutiftpt_record, key_padding_mask = key_padding_mask)
-                g_mutiftpt_output = torch.nn.functional.normalize(g_mutiftpt_record, p=1, dim=2) # 为了数据的稳定！非常关键！要不都是nan
                 # 对每个节点attention后所有的prompt求avg得到每个节点的最终混合prompt
                 # g_mutiftpt_final_output = torch.mean(g_mutiftpt_output, dim=1) # 求平均，不好，因为有一些padding的embedding
                 g_mutiftpt_final_output = g_mutiftpt_output[:,0,:] # BERT的方法，利用添加的readout_token的embedding
@@ -346,12 +367,10 @@ class RobustPrompt_I(torch.nn.Module):
             # # ######################################################################################
 
             ######################################################################################
-            # 放在后面： 对图的特征进行多提示添加后根据添加prompt的特征修剪图
-            g.x = self.add_pt(g.x, g_mutiftpt_final_output)
-            filter_output = self.filter_module(g)
-            pruned_edge_index = g.edge_index[:, filter_output['edge_mask']]
-            pruned_g_after_pt= Data(x=g.x, edge_index=pruned_edge_index, y=g.y)
-            graph_mutiftpt.append(pruned_g_after_pt)
+            # Eval path is add-only. Training-time tau pruning is handled in Tune().
+            prompted_g = g.clone()
+            prompted_g.x = self.add_pt(g.x, g_mutiftpt_final_output)
+            graph_mutiftpt.append(prompted_g)
             ######################################################################################
             # *****************************************  loss PART  ***************************************** #
 
@@ -377,14 +396,32 @@ class RobustPrompt_I(torch.nn.Module):
         for batch_id, train_batch in enumerate(train_loader):  
             train_batch = train_batch.to(device)
             prompted_graph, node_use_each_pt_whole_batch = self.forward(train_batch, device)
-            node_emb, graph_emb = gnn(prompted_graph.x, prompted_graph.edge_index, prompted_graph.batch,  prompt_type = 'RobustPrompt-I')
+            node_emb_intermediate, _ = gnn(prompted_graph.x, prompted_graph.edge_index, prompted_graph.batch,  prompt_type = 'RobustPrompt-I')
+
+            if prompted_graph.edge_index.numel() > 0:
+                edge_sim_intermediate = F.cosine_similarity(
+                    node_emb_intermediate[prompted_graph.edge_index[0]],
+                    node_emb_intermediate[prompted_graph.edge_index[1]],
+                    dim=1
+                )
+                tune_keep_mask = edge_sim_intermediate >= self.pt_threshold
+                tuned_edge_index = prompted_graph.edge_index[:, tune_keep_mask]
+            else:
+                tuned_edge_index = prompted_graph.edge_index
+
+            tuned_graph = prompted_graph.clone()
+            tuned_graph.edge_index = tuned_edge_index
+            node_emb, graph_emb = gnn(tuned_graph.x, tuned_graph.edge_index, tuned_graph.batch,  prompt_type = 'RobustPrompt-I')
             pre = answering(graph_emb)
 
 
             # *********************************************  loss PART  ********************************************* #
             ######################################################################################
             # loss_mse 提示整体以同质性假设为导向
-            loss_mse = F.mse_loss(node_emb[prompted_graph.edge_index[0]], node_emb[prompted_graph.edge_index[1]])
+            if tuned_graph.edge_index.numel() > 0:
+                loss_mse = F.mse_loss(node_emb[tuned_graph.edge_index[0]], node_emb[tuned_graph.edge_index[1]])
+            else:
+                loss_mse = node_emb.sum() * 0.
             # print("loss_mse : ", loss_mse)
             ######################################################################################
             # loss_pt 针对每一个prompt让筛选节点的平均embedding和未筛选节点的平均embedding相似
@@ -404,7 +441,7 @@ class RobustPrompt_I(torch.nn.Module):
                         continue
                     global_pt_mean    = torch.mean(node_emb[node_use_each_pt_whole_batch[pt]], dim = 0)    # [ 1, hid_dim ] 一个batch只有一个 全局的
                     global_no_pt_mean = torch.mean(node_emb[node_use_no_pt], dim = 0)                      # [ 1, hid_dim ] 一个batch只有一个 全局的
-                    loss_pt_kl = torch.nn.KLDivLoss()(F.log_softmax(global_pt_mean / self.temperature), F.softmax(global_no_pt_mean / self.temperature)) 
+                    loss_pt_kl = torch.nn.KLDivLoss()(F.log_softmax(global_pt_mean / self.temperature, dim=-1), F.softmax(global_no_pt_mean / self.temperature, dim=-1)) 
                     loss_pt += loss_pt_kl
              
                 else:
@@ -431,7 +468,7 @@ class RobustPrompt_I(torch.nn.Module):
                         continue # 这里跳出了当前pt，整个batch都判断完了都没有，所以不用进行kl loss
                     global_pt_batch    = torch.stack(global_pt_batch)        # [ shot_num * num_class, hid_dim ] 每个图一个
                     global_no_pt_batch = torch.stack(global_no_pt_batch)     # [ shot_num * num_class, hid_dim ] 每个图一个
-                    loss_pt_kl = torch.nn.KLDivLoss()(F.log_softmax(global_pt_batch / self.temperature), F.softmax(global_no_pt_batch / self.temperature)) 
+                    loss_pt_kl = torch.nn.KLDivLoss()(F.log_softmax(global_pt_batch / self.temperature, dim=-1), F.softmax(global_no_pt_batch / self.temperature, dim=-1)) 
                     loss_pt += loss_pt_kl
             # print("loss_pt : ", loss_pt)
             ######################################################################################
@@ -465,6 +502,8 @@ class RobustPrompt_I(torch.nn.Module):
             train_loss = lossfn(pre, train_batch.y) + self.weight_mse * loss_mse + self.weight_kl * loss_pt + self.weight_constraint * loss_constraint
             opi.zero_grad()
             train_loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(answering.parameters(), max_norm=1.0)
             opi.step()
             running_loss += train_loss.item()
         return running_loss / len(train_loader)
